@@ -37,18 +37,28 @@ ComplexNumber operator-(double a, const ComplexNumber &c){
 }
 
 ComplexNumber ComplexNumber::operator*(const ComplexNumber &c){
-	return ComplexNumber(c.real*real,c.real*imag);
+	return ComplexNumber(real*c.real - imag*c.imag, real*c.imag + imag*c.real);
 }
 
 ComplexNumber operator*(double a, const ComplexNumber &c){
 	return ComplexNumber(c.real*a,c.imag*a);
 }
 
-ostream & operator<<(ostream &os, const ComplexNumber &c){
-	if(c.imag > 0 and c.real != 0) return os << c.real << "+" << c.imag << "i" ;
-	else if(c.imag < 0 and c.real != 0) return os << c.real << c.imag << "i" ;
-	else if(c.imag == 0) return os << c.real ;
-	else if(c.real == 0) return os << c.imag << "i" ;
+ComplexNumber ComplexNumber :: operator/(const ComplexNumber &y){
+  double scale = pow(y.real,2)+pow(y.imag,2);
+	return ComplexNumber( (real*y.real + imag*y.imag)/ scale, -(y.imag*real - y.real*imag) / scale);
+}
+ComplexNumber operator/(double x,const ComplexNumber &y){
+  double scale =  pow(y.real,2)+pow(y.imag,2);
+	return ComplexNumber(y.real * x /scale , -x*y.imag / scale);
+}
+
+ostream & operator<<(ostream &os,const ComplexNumber &c){
+  if (c.real == 0 && c.imag == 0) return os<<"0" ;
+  else if (c.real == 0) return os <<c.imag<<"i" ;
+	else if (c.imag == 0) return os<<c.real ;
+	else if (c.imag < 0) return os <<c.real << c.imag<<"i";
+	else return os << c.real <<"+"<<c.imag<<"i";
 }
 
 bool ComplexNumber::operator==(const ComplexNumber &c){
@@ -66,7 +76,7 @@ double ComplexNumber::abs(){
 }
 
 double ComplexNumber::angle(){
-	return atan(imag / real) * 180 / 3.14 ;
+	return atan2(imag , real) * 180 / M_PI ;
 }
 
 
@@ -83,13 +93,13 @@ int main(){
 	cout << c-c << "\n";
 	cout << "-----------------------------------\n";
 	
-	// ComplexNumber d = (a+b)/c;
-	// ComplexNumber e = b/(a-c);
-	// cout << d << "\n";
-	// cout << e << "\n";
+	ComplexNumber d = (a+b)/c;
+	ComplexNumber e = b/(a-c);
+	cout << d << "\n";
+	cout << e << "\n";
 	cout << c*2 << "\n";
 	cout << 0.5*c << "\n";
-	// cout << 1/c << "\n";
+	cout << 1/c << "\n";
 	cout << "-----------------------------------\n";
 	
 	cout << ComplexNumber(1,1).abs() << "\n";
